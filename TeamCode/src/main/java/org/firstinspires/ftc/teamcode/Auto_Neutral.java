@@ -4,7 +4,6 @@ import com.qualcomm.hardware.bosch.BHI260IMU;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -14,8 +13,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
-@Autonomous(name = "AutoTest")
-public class AutonomousTest extends LinearOpMode {
+@Autonomous(name = "AutoNeutral")
+public class Auto_Neutral extends LinearOpMode {
 
     private DcMotor BackLeftDrive = null;
     private DcMotor BackRightDrive = null;
@@ -61,16 +60,15 @@ public class AutonomousTest extends LinearOpMode {
         ArmMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
-        ArmMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         FrontLeftDrive.setDirection(DcMotor.Direction.FORWARD);
         BackLeftDrive.setDirection(DcMotor.Direction.REVERSE);
         FrontRightDrive.setDirection(DcMotor.Direction.REVERSE);
         BackRightDrive.setDirection(DcMotor.Direction.FORWARD);
         ScoopMotor.setDirection(DcMotor.Direction.REVERSE);
-        MoonMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        RightServo.setPosition(0);
-        LeftServo.setPosition(1);
+        LeftServo.setPosition(0);
+        RightServo.setPosition(1);
         MiddleServo.setPosition(0.9);
+
 
         resetEncoders();
         telemetry.addData("Status", "Initialized");
@@ -80,14 +78,22 @@ public class AutonomousTest extends LinearOpMode {
 
         if (opModeIsActive()) {
             // Example pathway
-            UpSlide(500,0.5);
 
-           // ArmUp(500,1.0);
-//           Forward(1000,0.5);
-           //ArmDown(75, 0.5);
-          // UpSlide(1600,0.5);
+            ArmDown(75,0.5);
+            StrafeLeft(685,1.0);
+            UpSlide(1300,0.7);
+            Backward(288,0.7);
+            MiddleServo.setPosition(0);
+            sleep(1000);
+            MiddleServo.setPosition(0.9);
+            sleep(500);
+            DownSlide(1300,0.7);
+            TurnLeft(600,1.0);
+            ArmDown(200,0.5);
+            ScoopIn(1000,0.8);
+            Forward(658,1.0);
 
-           sleep(100000);
+
         }
     }
 
@@ -192,6 +198,7 @@ public class AutonomousTest extends LinearOpMode {
 
         MoonMotor.setPower(speed);
 
+
         while (!(!opModeIsActive() ||
                 !MoonMotor.isBusy())) {
             telemetry.update();
@@ -204,7 +211,6 @@ public class AutonomousTest extends LinearOpMode {
     private void DownSlide (int ticks, double speed) {
         moveSlide(-ticks, speed);
     }
-
 
     private void moveArm (int ArmMotorTicks, double speed) {
         ArmMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -228,7 +234,6 @@ public class AutonomousTest extends LinearOpMode {
     private void ArmUp (int ticks, double speed) {
         moveArm(ticks, speed);
     }
-
 
     private void Scoop (int ScoopMotorTicks, double speed) {
         ScoopMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -254,35 +259,3 @@ public class AutonomousTest extends LinearOpMode {
 
 }
 
-
-//    private void turnToAngle(double targetAngle, double power, boolean isLeftTurn) {
-////        double initialAngle = getAngle();
-////        double target = initialAngle + (isLeftTurn ? -targetAngle : targetAngle);
-////        ElapsedTime runtime = new ElapsedTime();
-
-//        while (opModeIsActive() && Math.abs(target - getAngle()) > 1 && runtime.seconds() < 5) {
-//            double turnPower = Range.clip(power, -1.0, 1.0);
-//            if (isLeftTurn) {
-//                FrontLeftDrive.setPower(-turnPower);
-//                FrontRightDrive.setPower(turnPower);
-//                BackLeftDrive.setPower(-turnPower);
-//                BackRightDrive.setPower(turnPower);
-//            } else {
-//                FrontLeftDrive.setPower(turnPower);
-//                FrontRightDrive.setPower(-turnPower);
-//                BackLeftDrive.setPower(turnPower);
-//                BackRightDrive.setPower(-turnPower);
-//            }
-//        }
-
-        // Stop the motors
-//        stopMotors();
-//    }
-//
-
-    // Get the current angle from the IMU
-//    private double getAngle() {
-//        Orientation angles = imu.getRobotOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-//        return angles.firstAngle;
-//    }
-//}

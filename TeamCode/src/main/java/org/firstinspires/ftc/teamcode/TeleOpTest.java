@@ -54,8 +54,9 @@ public class TeleOpTest extends LinearOpMode {
         FrontRightDrive.setDirection(DcMotor.Direction.REVERSE);
         BackRightDrive.setDirection(DcMotor.Direction.FORWARD);
         ScoopMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        LeftServo.setPosition(1);
-        RightServo.setPosition(0);
+        ArmMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        LeftServo.setPosition(0.45);
+        RightServo.setPosition(0.45);
         MiddleServo.setPosition(0.9);
 
 
@@ -101,11 +102,11 @@ public class TeleOpTest extends LinearOpMode {
             double currentPosition = MoonMotor.getCurrentPosition();
 
             if (gamepad2.b) {               //slide go down
-                MoonMotor.setPower(0.40);
+                MoonMotor.setPower(0.7);
                 targetPosition = currentPosition;
 
             } else if (gamepad2.a) {        //slide go up
-                MoonMotor.setPower(-0.40);
+                MoonMotor.setPower(-0.7);
                 targetPosition = currentPosition;
 
             } else {
@@ -138,10 +139,10 @@ public class TeleOpTest extends LinearOpMode {
                 LeftServo.setPosition(1);
             }
 
-            if(gamepad2.dpad_up) {             //take in sample
+            if(gamepad2.dpad_up) {             //spit out sample
                 ScoopMotor.setPower(0.8);
 
-            } else if(gamepad2.dpad_down) {     //spit out sample
+            } else if(gamepad2.dpad_down) {     //take in  sample
                 ScoopMotor.setPower(-1.0);
 
             }else {
