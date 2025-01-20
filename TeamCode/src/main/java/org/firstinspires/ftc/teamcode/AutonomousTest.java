@@ -80,14 +80,8 @@ public class AutonomousTest extends LinearOpMode {
 
         if (opModeIsActive()) {
             // Example pathway
-            UpSlide(500,0.5);
 
-           // ArmUp(500,1.0);
-//           Forward(1000,0.5);
-           //ArmDown(75, 0.5);
-          // UpSlide(1600,0.5);
-
-           sleep(100000);
+            moveWithSlide(1000, 0.7, 800, 0.5, "forward");
         }
     }
 
@@ -114,7 +108,8 @@ public class AutonomousTest extends LinearOpMode {
         FrontRightDrive.setPower(0);
     }
 
-    private void moveRobot(int backLeftTicks, int backRightTicks, int frontLeftTicks, int frontRightTicks, double speed) {
+    private void moveRobot(int backLeftTicks, int backRightTicks,
+                           int frontLeftTicks, int frontRightTicks, double speed) {
         BackLeftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         BackRightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         FrontLeftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -198,11 +193,11 @@ public class AutonomousTest extends LinearOpMode {
         }
     }
     private void UpSlide (int ticks, double speed)  {
-        moveSlide(ticks,speed);
+        moveSlide(-ticks,speed);
     }
 
     private void DownSlide (int ticks, double speed) {
-        moveSlide(-ticks, speed);
+        moveSlide(ticks, speed);
     }
 
 
@@ -239,6 +234,8 @@ public class AutonomousTest extends LinearOpMode {
 
         ScoopMotor.setPower(speed);
 
+
+
     }
 
     private void ScoopIn (int ticks, double speed) {
@@ -249,6 +246,38 @@ public class AutonomousTest extends LinearOpMode {
         Scoop(ticks, speed);
     }
 
+    // Function to move and raise the slide simultaneously
+    private void moveWithSlide(int directionTicks, double directionSpeed, int slideTicks, double slideSpeed, String direction) {
+        Thread slideThread = new Thread(() -> moveSlide(slideTicks, slideSpeed)); // Slide thread
+        slideThread.start(); // Start the slide movement
+
+        // Perform directional movement
+        switch (direction.toLowerCase()) {
+            case "forward":
+                Forward(directionTicks, directionSpeed);
+                break;
+            case "backward":
+                Backward(directionTicks, directionSpeed);
+                break;
+            case "straferight":
+                StrafeRight(directionTicks, directionSpeed);
+                break;
+            case "strafeleft":
+                StrafeLeft(directionTicks, directionSpeed);
+                break;
+            default:
+                telemetry.addData("Error", "Invalid direction: " + direction);
+                telemetry.update();
+        }
+
+        try {
+            slideThread.join(); // Wait for the slide to complete
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            telemetry.addData("Error", "Slide thread interrupted");
+            telemetry.update();
+        }
+    }
 
 
 

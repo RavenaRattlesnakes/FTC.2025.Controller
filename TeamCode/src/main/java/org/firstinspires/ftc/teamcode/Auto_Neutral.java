@@ -4,6 +4,7 @@ import com.qualcomm.hardware.bosch.BHI260IMU;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -60,15 +61,16 @@ public class Auto_Neutral extends LinearOpMode {
         ArmMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
+        ArmMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         FrontLeftDrive.setDirection(DcMotor.Direction.FORWARD);
         BackLeftDrive.setDirection(DcMotor.Direction.REVERSE);
         FrontRightDrive.setDirection(DcMotor.Direction.REVERSE);
         BackRightDrive.setDirection(DcMotor.Direction.FORWARD);
         ScoopMotor.setDirection(DcMotor.Direction.REVERSE);
-        LeftServo.setPosition(0);
+        MoonMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         RightServo.setPosition(1);
+        LeftServo.setPosition(0);
         MiddleServo.setPosition(0.9);
-
 
         resetEncoders();
         telemetry.addData("Status", "Initialized");
@@ -79,19 +81,43 @@ public class Auto_Neutral extends LinearOpMode {
         if (opModeIsActive()) {
             // Example pathway
 
-            ArmDown(75,0.5);
+            ArmDown(600,0.5);
             StrafeLeft(685,1.0);
-            UpSlide(1300,0.7);
-            Backward(288,0.7);
+            UpSlide(900,0.7);
+            Backward(300,0.7);
             MiddleServo.setPosition(0);
             sleep(1000);
             MiddleServo.setPosition(0.9);
             sleep(500);
-            DownSlide(1300,0.7);
+            DownSlide(900,0.7);
+            TurnLeft(650,1.0);
+            Forward(658,0.7);
+            ScoopIn(1200,1.0);
+            ArmUp(600,0.5);
+            ArmDown(600,0.7);
+            MiddleServo.setPosition(0.5);
+            Backward(690,1.0);
+            TurnRight(650,1.0);
+            UpSlide(900,0.7);
+            MiddleServo.setPosition(0);
+            sleep(1000);
+            MiddleServo.setPosition(0.9);
+            sleep(500);
+            DownSlide(900,0.7);
+            Forward(562,1.0);
             TurnLeft(600,1.0);
-            ArmDown(200,0.5);
-            ScoopIn(1000,0.8);
-            Forward(658,1.0);
+            Forward(100,0.7);
+            ScoopIn(1200,1.0);
+            ArmUp(600,0.5);
+            ArmDown(100,0.7);
+            MiddleServo.setPosition(0.5);
+            Backward(690,1.0);
+            TurnRight(650,1.0);
+            UpSlide(900,0.7);
+            MiddleServo.setPosition(0);
+            sleep(1000);
+            MiddleServo.setPosition(0.9);
+            sleep(500);
 
 
         }
@@ -120,7 +146,8 @@ public class Auto_Neutral extends LinearOpMode {
         FrontRightDrive.setPower(0);
     }
 
-    private void moveRobot(int backLeftTicks, int backRightTicks, int frontLeftTicks, int frontRightTicks, double speed) {
+    private void moveRobot(int backLeftTicks, int backRightTicks,
+                           int frontLeftTicks, int frontRightTicks, double speed) {
         BackLeftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         BackRightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         FrontLeftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -198,19 +225,19 @@ public class Auto_Neutral extends LinearOpMode {
 
         MoonMotor.setPower(speed);
 
-
         while (!(!opModeIsActive() ||
                 !MoonMotor.isBusy())) {
             telemetry.update();
         }
     }
     private void UpSlide (int ticks, double speed)  {
-        moveSlide(ticks,speed);
+        moveSlide(-ticks,speed);
     }
 
     private void DownSlide (int ticks, double speed) {
-        moveSlide(-ticks, speed);
+        moveSlide(ticks, speed);
     }
+
 
     private void moveArm (int ArmMotorTicks, double speed) {
         ArmMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -235,6 +262,7 @@ public class Auto_Neutral extends LinearOpMode {
         moveArm(ticks, speed);
     }
 
+
     private void Scoop (int ScoopMotorTicks, double speed) {
         ScoopMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
@@ -243,6 +271,12 @@ public class Auto_Neutral extends LinearOpMode {
         ScoopMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         ScoopMotor.setPower(speed);
+
+        while (!(!opModeIsActive() ||
+                !ScoopMotor.isBusy())) {
+            telemetry.update();
+        }
+
 
     }
 

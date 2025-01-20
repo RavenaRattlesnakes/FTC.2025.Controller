@@ -54,7 +54,9 @@ public class TeleOpTest extends LinearOpMode {
         FrontRightDrive.setDirection(DcMotor.Direction.REVERSE);
         BackRightDrive.setDirection(DcMotor.Direction.FORWARD);
         ScoopMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        MoonMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         ArmMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+
         LeftServo.setPosition(0.45);
         RightServo.setPosition(0.45);
         MiddleServo.setPosition(0.9);
@@ -161,6 +163,11 @@ public class TeleOpTest extends LinearOpMode {
 
             if (gamepad1.b){                      // return basket
                 MiddleServo.setPosition (0.87);
+
+            }
+
+            if (gamepad1.y){                      // flat bucket
+                MiddleServo.setPosition (0.5);
 
             }
 
